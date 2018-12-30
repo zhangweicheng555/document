@@ -1,0 +1,110 @@
+
+针对controller控制层汇总的接口：
+
+一、配置流程删除监听器
+      位置com.kuandeng.kts.activiti.listener.ProcessCancelledListener
+二、重试关闭节点环节
+       位置：com.kuandeng.kts.activiti.ActivitiController
+       接口：/task/closeEdit
+三、创建副本重试开始服务环节
+       位置：com.kuandeng.kts.activiti.ActivitiController
+       接口：/task/createCopy
+四、重试提交成果库环节
+       位置：com.kuandeng.kts.activiti.ActivitiController
+       接口：/task/editCommitSst
+五、重试打开编辑环节
+       位置：com.kuandeng.kts.activiti.ActivitiController
+       接口：/task/openEditSst
+六、批量删除流程功能
+       位置：com.kuandeng.kts.activiti.ActivitiController
+       接口：/task/delete/processInstances
+七、poc流程任务申领功能
+       位置：com.kuandeng.kts.poc.controller.PocActivitiController
+       接口：/poc/activiti/claim
+八、服务日志客户端配置，用于访问kd-log-server接口
+       位置：com.kuandeng.kts.client.KdLogServerClient
+       接口：/kd-log-server/log/findByTaskId
+九、日志查询接口，从kd-log-server查询指定任务对应的日志信息，支持异常邮件功能使用，待确认废弃之后可删除。
+				位置：com.kuandeng.kts.log.controller.LogController
+				接口：/log/findByTaskIds
+十、删除项目时，与任务相关的流程删除采用mq队列
+				位置：com.kuandeng.kts.mq
+				接口：ProcessDeleteConsumeMq.java/ProcessDeleteProduceMq.java/ProcessDeleteReceiver.java/ProcessDeleteSender.java
+十一、根据范围查询指定业务类型的任务ID、轨迹、范围、轨迹线，供poc对接使用，待确认废弃后可删除
+       位置：com.kuandeng.kts.poc.controller.PocBusinessController
+       接口：/poc/task/findTaskIds
+十二、修改项目信息
+       位置：com.kuandeng.kts.project.controller.ProjectController
+       接口：/project/update
+十三、根据ID查询项目
+       位置：com.kuandeng.kts.project.controller.ProjectController
+       接口：/project/findById
+十四、根据条件查询项目
+       位置：com.kuandeng.kts.project.controller.ProjectController
+       接口：/project/findById
+十五、项目删除以及级联删除任务业务表
+       位置：com.kuandeng.kts.project.controller.ProjectController
+       接口：/project/delete
+十六、任务创建失败记录该任务对应的相关信息
+       位置：com.kuandeng.kts.task.controller.TaskBusinessController
+       接口：/task/create
+十七、根据采集任务查询自动化任务id、名字、轨迹、批次
+       位置：com.kuandeng.kts.task.controller.TaskBusinessController
+       接口：/task/queryRecogTask
+十八、根据业务编码批量删除任务业务表与流程(参与开发、维护)
+       位置：com.kuandeng.kts.task.controller.TaskBusinessController
+       接口：/task/deleteByBussCode
+十九、根据范围和业务编码查询任务数量(排查问题使用)
+       位置：com.kuandeng.kts.task.controller.TaskBusinessController
+       接口：/task/findTaskNum
+二十、根据任务ID查询任务对应的重试开始服务环节执行次数
+       位置：com.kuandeng.kts.task.controller.TaskBusinessController
+       接口：/task/findNumByTaskId
+二十一、融合任务(平面融合、双融合、接边融合)任务环节信息(id,名字，轨迹，范围)查询，主要用于判断该任务是不是跑过融合阶段
+       位置：com.kuandeng.kts.task.controller.TaskBusinessController
+       接口：/task/findNumByTaskId
+二十二、根据范围查询自动化envType,调试使用
+       位置：com.kuandeng.kts.task.controller.TaskBusinessController
+       接口：/task/findAutoTaskInfo
+二十三、分页查询任务运行时异常信息
+       位置：com.kuandeng.kts.task.controller.TaskBusinessController
+       接口：/task/queryErrorTask
+二十四、根据任务ID查询来源范围、当前范围(待确认废弃后可删除)
+        位置：com.kuandeng.kts.task.controller.TaskBusinessController
+       接口：/task/queryErrorTask
+二十五、分页查询创建任务时异常信息(供临时排查问题使用)
+       位置：com.kuandeng.kts.task.createFailureTask.controller.TaskFailureController
+       接口：/task/failure/query
+二十六、统计某个任务各个流程节点执行次数
+       位置：com.kuandeng.kts.analysis.controller.AnalysisController
+       接口：/task/failure/query
+二十七、查询服务耗时时间统计(任务为单位，各个服务耗时)
+       位置：com.kuandeng.kts.analysis.controller.AnalysisController
+       接口：/analysis/findServiceConsume
+二十八、服务总共耗时时间统计
+       位置：com.kuandeng.kts.analysis.controller.AnalysisController
+       接口：/analysis/serviceConsume
+二十九、人员认领任务数统计
+       位置：com.kuandeng.kts.analysis.controller.AnalysisController
+       接口：/analysis/findClaimTask
+三十、查询与指定任务在范围上相交的任务数量
+       位置：com.kuandeng.kts.analysis.controller.AnalysisController
+       接口：/analysis/findCrossTask
+三十一、根据任务处理seq查询数据处理服务
+       位置：com.kuandeng.kts.process.controller.DataProcessServController
+       接口：/data/process/serv/findBySeq
+三十二、根据服务实例查询最新数据处理服务
+       位置：com.kuandeng.kts.process.controller.DataProcessServController
+       接口：/data/process/serv/queryLatestByInstance
+三十三、根据经纬度查询adCode
+       位置：com.kuandeng.kts.process.controller.DataProcessServController
+       接口：/data/process/serv/queryAdCode
+三十四、根据任务ID标记查询服务信息(待确认废弃后可删掉)
+       位置：com.kuandeng.kts.process.controller.DataProcessServController
+       接口：/data/process/serv/queryServiceParams
+三十五、根据任务ID追溯查询envType服务信息
+       位置：com.kuandeng.kts.process.controller.DataProcessServController
+       接口：/data/process/serv/queryServiceParamsByTaskId
+三十六、根据任务ID查询本任务envType服务信息
+       位置：com.kuandeng.kts.process.controller.DataProcessServController
+       接口：/data/process/serv/queryServiceParamsByTaskId

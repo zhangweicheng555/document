@@ -1,0 +1,10 @@
+</head>
+<body>
+<input type="text" id="test1">
+<script src="/laydate/laydate.js"></script> <!-- 改成你的路径 -->
+<script>
+//执行一个laydate实例
+laydate.render({
+  elem: '#test1' //指定元素
+});
+</script>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/defaults.xml" /> 
+	<include resource="org/springframework/boot/logging/logback/console-appender.xml" /> 
+	<jmxConfigurator />
+	<logger name="com.kuandeng.kts.activiti.diagram.ProcessInstanceHighlightsResource" level="OFF">
+        <appender-ref ref="CONSOLE" />
+     </logger>
+	<appender name="rolling"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<fileNamePattern>${log.path}/%d{yyyy-MM}/%d{yyyy-MM-dd}-%i.log
+			</fileNamePattern>
+			<!-- each file should be at most 100MB, keep 60 days worth of history, 
+				but at most 20GB -->
+			<maxFileSize>1GB</maxFileSize>
+			<maxHistory>365</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n
+			</pattern>
+		</encoder>
+	</appender>
+	<root level="INFO">
+		<appender-ref ref="rolling" />
+		<appender-ref ref="CONSOLE" /> 
+	</root>
+	
+	
+	
+	<!-- 删除操作配置日志      每天产生一个的日志-->
+	<appender name="delLog"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<fileNamePattern>${log.path}/%d{yyyy-MM}/%d{yyyy-MM-dd}-%i.delete.log
+			</fileNamePattern>
+			<maxFileSize>1GB</maxFileSize>
+			<maxHistory>365</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n
+			</pattern>
+		</encoder>
+	</appender>
+	<logger name="delOperateLog" level="info" additivity="true">
+		<appender-ref ref="delLog" />
+	</logger>
+</configuration>

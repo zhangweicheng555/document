@@ -1,0 +1,32 @@
+
+
+jdk1.8接口新增一下功能：
+
+
+迫不及待的准备实验一下，在接口中定义default方法：
+public interface DefaultInterface
+{
+    default public void doBusiness(String world)   注意一下 他是有方法体的
+    {
+        
+    }
+
+}
+诶，编译器咋个报错呢？
+仔细一看，原来需要java 1.8才支持此功能。
+
+网上搜索了一下，Java 1.8对接口有两个方面的增强：
+(1)增加default方法。感觉Java的接口也开始融入虚类的属性。对已有的接口，如果想对接口增加一个新方法，那么需要对所有实现该接口的类进行修改。而有了default方法，可以解决该问题。
+(2)新增了static函数。
+例如，下面接口中定义了一个静态方法 find，该方法可以直接用 StaticFunInterface .find() 来调用。
+public interface StaticFunInterface {
+public static int find(){
+return 1;
+}
+}
+public class TestStaticFun {
+public static void main(String[] args){
+//接口中定义了静态方法 find 直接被调用
+StaticFunInterface.fine();
+}
+}

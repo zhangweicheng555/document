@@ -1,0 +1,7 @@
+
+
+
+日志输出的占位符：{}
+
+
+logger.debug("the message {} is from {}", msg, somebody);

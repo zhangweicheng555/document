@@ -1,0 +1,64 @@
+权限表
+------------------------------------------------------------------------
+sys_permission  CREATE TABLE `sys_permission` (                            
+                  `id` int(11) NOT NULL AUTO_INCREMENT,                    
+                  `parentId` int(11) NOT NULL,                             
+                  `name` varchar(50) NOT NULL,                             
+                  `css` varchar(30) DEFAULT NULL,                          
+                  `href` varchar(1000) DEFAULT NULL,                       
+                  `type` tinyint(1) NOT NULL,                              
+                  `permission` varchar(50) DEFAULT NULL,                   
+                  `sort` int(11) NOT NULL,                                 
+                  PRIMARY KEY (`id`)                                       
+                ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb
+
+角色表                
+------------------------------------------------------------
+sys_role  CREATE TABLE `sys_role` (                                 
+            `id` int(11) NOT NULL AUTO_INCREMENT,                   
+            `name` varchar(50) NOT NULL,                            
+            `description` varchar(100) DEFAULT NULL,                
+            `createTime` datetime NOT NULL,                         
+            `updateTime` datetime NOT NULL,                         
+            PRIMARY KEY (`id`),                                     
+            UNIQUE KEY `name` (`name`)                              
+          ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4  
+          
+          
+用户表                                             
+------------------------------------------------------------------
+sys_user  CREATE TABLE `sys_user` (                                 
+            `id` int(11) NOT NULL AUTO_INCREMENT,                   
+            `username` varchar(50) NOT NULL,                        
+            `password` varchar(60) NOT NULL,                        
+            `nickname` varchar(255) DEFAULT NULL,                   
+            `headImgUrl` varchar(255) DEFAULT NULL,                 
+            `phone` varchar(11) DEFAULT NULL,                       
+            `telephone` varchar(30) DEFAULT NULL,                   
+            `email` varchar(50) DEFAULT NULL,                       
+            `birthday` date DEFAULT NULL,                           
+            `sex` tinyint(1) DEFAULT NULL,                          
+            `status` tinyint(1) NOT NULL DEFAULT '1',               
+            `createTime` datetime NOT NULL,                         
+            `updateTime` datetime NOT NULL,                         
+            PRIMARY KEY (`id`),                                     
+            UNIQUE KEY `username` (`username`)                      
+          ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4  
+
+
+用户-角色关系表                  一对多的关系      (多个角色分多条记录)       
+------------------------------------------------------
+sys_role_user  CREATE TABLE `sys_role_user` (           
+                 `userId` int(11) NOT NULL,             
+                 `roleId` int(11) NOT NULL,             
+                 PRIMARY KEY (`userId`,`roleId`)        
+               ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4   
+
+
+角色和权限的关系                 (多个权限分多条记录)
+-------------------  -----------------------------------------
+sys_role_permission  CREATE TABLE `sys_role_permission` (     
+                       `roleId` int(11) NOT NULL,             
+                       `permissionId` int(11) NOT NULL,       
+                       PRIMARY KEY (`roleId`,`permissionId`)  
+                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  

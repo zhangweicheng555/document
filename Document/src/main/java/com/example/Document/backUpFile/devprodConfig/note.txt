@@ -1,0 +1,7 @@
+
+
+1.准备application-dev.yml    application-prod.yml      只是在原来的基础上   -标记
+2.在bootstrap.yml  添加以下
+spring:  
+  profiles:
+    active: dev

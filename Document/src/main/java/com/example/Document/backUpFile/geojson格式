@@ -1,0 +1,134 @@
+
+
+1.mapping:
+
+
+{
+        "mappings": {
+            "geom": {
+                "properties": {
+                    "geometry": {
+                        "type": "geo_shape"
+                    },
+                    "properties": {
+                        "properties": {
+                            "auto": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "fusion": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "recog": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "survey": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "track_id": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "type": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    }
+                }
+            }
+        }
+}
+
+2.数据格式：
+{"type":"Feature","geometry":{"type":"LineString","coordinates":[[116.42609439185,39.97030362702],[116.42633209769,39.9707210308],[116.42761100276,39.97264612057]]},"properties":{"track_id":"1000003_20180701094508751","survey":"2","recog":"1","auto":"1","fusion":"1"}}
+
+
+
+3.geojson与mapping的注意事项：
+    一/注意geojson格式：  下面是一个geojson格式的三种类型，下面的任何一个符合就可以
+      { "type": "FeatureCollection",
+  "features": [
+  
+  格式1
+  
+    { "type": "Feature",
+      "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
+      "properties": {"prop0": "value0"}
+      },
+      
+      
+     格式2   这个是线坐标geojson
+     
+    { "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+          ]
+        },
+      "properties": {
+        "prop0": "value0",
+        "prop1": 0.0
+        }
+      },
+      
+      
+      格式3  这个是图坐标（闭合曲线的geojson）
+      
+    { "type": "Feature",
+       "geometry": {
+         "type": "Polygon",
+         "coordinates": [
+           [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+             [100.0, 1.0], [100.0, 0.0] ]
+           ]
+       },
+       "properties": {
+         "prop0": "value0",
+         "prop1": {"this": "that"}
+         }
+         
+       }
+       
+     ]
+   }
+   
+   
+   二映射里面的geometry   对应geojson里面的geometry（type+coordinates）  
+     "geometry": {
+                        "type": "geo_shape"
+                    },

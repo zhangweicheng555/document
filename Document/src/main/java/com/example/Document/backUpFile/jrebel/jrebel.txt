@@ -1,0 +1,23 @@
+
+
+局部的热部署插件  直接在eclipse marketplace下载即可  搜jrebel
+
+
+然后激活  
+
+https://blog.csdn.net/cjwcjwwjcwjc/article/details/80050633
+
+jrebel idea插件激活，亲测可用：
+
+在jrebel server处，写上：
+
+http://139.199.89.239:1008/88414687-3b91-4286-89ba-2dc813b107ce
+
+如果出现激活过期的情况，请重新生成guid，替换原来的guid即可
+
+邮箱随便写，即可激活。
+--------------------- 
+作者：cjwcjwwjcwjc 
+来源：CSDN 
+原文：https://blog.csdn.net/cjwcjwwjcwjc/article/details/80050633 
+版权声明：本文为博主原创文章，转载请附上博文链接！

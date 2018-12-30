@@ -1,0 +1,92 @@
+
+
+1  多线程无返回结果执行  	
+	private static ThreadPoolExecutor threadPool = new ThreadPoolExecutor(10, 10, 30, TimeUnit.SECONDS,
+			new LinkedBlockingQueue<Runnable>());
+			
+			threadPool.execute
+			
+			
+			
+
+	2	多线程无返回结果执行  	
+ 
+		final ExecutorService pool = Executors.newFixedThreadPool(4);    //将这个改为  1的pool是最规范的
+		ListeningExecutorService service = MoreExecutors.listeningDecorator(pool);
+		
+		Runnable runKdsMeta = new Runnable() {
+			public void run() {
+				long starttime1 = System.currentTimeMillis();
+				try {
+					// 成果库数据删除
+					kdsMetaServiceClient.cleanData(instance);// 110641
+					long endtime1 = System.currentTimeMillis();
+					logger.info("成果库数据删除成功,耗时：" + (endtime1 - starttime1));
+				} catch (Exception e) {
+					logger.info("成果库数据删除异常:" + e.getMessage());
+				}
+
+			}
+		};
+		service.execute(runKdsMeta);
+		
+		
+		....same..
+		.....same..
+		service.shutdown();//不允许别的线程再进来
+		service.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);//等待所有的线程执行完毕  在继续
+		
+		
+		
+		
+		
+		3  多线程无返回结果执行  	
+		
+		在JDK帮助文档中，有如此一段话：“强烈建议程序员使用较为方便的 Executors 
+		工厂方法 
+		     Executors.newCachedThreadPool()（无界线程池，可以进行自动线程回收）、
+		     Executors.newFixedThreadPool(int)（固定大小线程池）
+		     Executors.newSingleThreadExecutor()（单个后台线程），它们均为大多数使用场景预定义了设置
+		     
+		     
+		     
+		     
+    4  获取
+    // 创建一个线程池
+		ExecutorService pool = Executors.newFixedThreadPool(10);
+		// 创建多个有返回值的任务
+		List<Future> list = new ArrayList<Future>();
+
+		// 业务获取数据模块
+		Future f1 = pool.submit(new ThreadCallable(example1));
+		Future f2 = pool.submit(new ThreadCallable(example2));
+		list.add(f1);
+		list.add(f2);
+
+		// 关闭线程池
+		pool.shutdown();
+
+		List<String> listA = new ArrayList<>();
+		// 获取所有并发任务的运行结果
+		for (Future f : list) {
+			// 从Future对象上获取任务的返回值，并输出到控制台
+			List<String> list2 = (List<String>) f.get();
+			for (String key : list2) {
+				listA.add(key);//这个地方不要判断是否执行完   就直接调用add让他阻塞  否则返回的结果会有异常
+			}
+		}
+		System.out.println("输出获取到的数据+++++++++++++++++++++++++++++++++++++");
+		for (String key : listA) {
+			System.out.println(key);
+		}    
+		     
+		     
+		     
+		     	@Autowired
+	private Example1 example1;
+	@Autowired
+	private Example2 example2;
+		     
+		     
+		     
+		

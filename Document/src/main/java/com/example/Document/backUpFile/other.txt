@@ -1,0 +1,19 @@
+
+判断是不是支持localStorage 本地存储 低版本是不支持的
+if(！window.localStorage){
+            alert("浏览器支持localstorage");
+            return false;
+        }else{
+            //主逻辑业务
+        }
+        
+        
+ iframe关于滚动条的去除和保留 
+
+    iframe嵌入页面后，我们有时需要调整滚动条，例如，去掉全部的滚动条，去掉右边的滚动条且保留底下的滚动条，去掉底下的滚动条且保留右边的滚动条。那么我们应该怎么做呢？
+   一：去掉全部的滚动条
+         第一个方法：   iframe 有一个scrolling属性，它有 auto , yes , no 这三个值。
+                             scrolling : auto -----在需要的时候滚动条出现
+                             scrolling : yes ------始终显示滚动条
+                             scrolling : no -------始终隐藏滚动条 
+                             当设置   scrolling : no 时，全部的滚动条就没有了。

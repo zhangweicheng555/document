@@ -1,0 +1,116 @@
+
+
+https://pagehelper.github.io/docs/howtouse/
+
+pagehelper的配置指南
+
+https://pagehelper.github.io/
+
+使用到的
+
+params：在支持startPage(Object params)方法时，添加参数以根据属性名称配置参数映射为对象的值，可以配置pageNum,pageSize,count,pageSizeZero,reasonable，
+               默认值为pageNum=pageNum;pageSize=pageSize;count=countSql;reasonable=reasonable;pageSizeZero=pageSizeZero。
+
+
+
+//1.使用静态方法  注意 
+PageHelper.startPage(1, 10);   页数  每页显示的数量  从1开始
+List<Country> list = countryMapper.selectIf(1);
+Page<SysTest> page=(Page<SysTest>) list;   必须强转为 page才行  因为返回的list本身就是page
+--PageInfo page = new PageInfo(list);
+
+
+//2. 使用方法的参数  注意这个参数的值与params的配置是有关系的  大小写必须一致
+//就是直接在dao的方法参数对应写好   supportMethodsArguments   true
+public interface CountryMapper {
+    List<Country> selectByPageNumSize(
+            @Param("user") User user,
+            @Param("pageNum") int pageNum, 
+            @Param("pageSize") int pageSize);
+}
+//3. POJO parameters  但是dao层不能其别名  所以这个有局限性
+public class User {
+    //other fields
+    //The following two parameters must be the same name as the params parameter
+    private Integer pageNum;
+    private Integer pageSize;
+}
+public interface CountryMapper {
+    List<Country> selectByPageNumSize(User user);
+}
+
+4.
+Page<Country> page = PageHelper.startPage(1, 10).doSelectPage(new ISelect() {
+    @Override
+    public void doSelect() {
+        countryMapper.selectGroupBy();
+    }
+});
+
+5.这个信息比 pege信息多
+pageInfo = PageHelper.startPage(1, 10).doSelectPageInfo(new ISelect() {
+    @Override
+    public void doSelect() {
+        countryMapper.selectGroupBy();
+    }
+});
+
+6.计算count
+//do count only  这个应该是将任何的查询方法转为  select count(*)的方式
+long total = PageHelper.count(new ISelect() {
+    @Override
+    public void doSelect() {
+        countryMapper.selectLike(country);
+    }
+});
+
+三 PageHelper参数
+PageHelper提供了几个可选参数，这些参数在按照上面两个例子使用时进行配置。
+
+可选参数如下：
+
+dialect：使用PageHelper方式的默认分页，如果要实现自己的页面逻辑，可以实现Dialect（com.github.pagehelper.Dialect）接口，然后将该属性配置为实现类的完全限定名称。
+以下参数是默认方言案例的参数。使用自定义方言实现时，以下参数无效。
+
+helperDialect：PageHelper默认会检测当前数据库的url，自动选择相应的数据库方言。您可以配置helperDialectProperty以指定方言。您可以使用下面的缩写：
+oracle，mysql，mariadb，sqlite，hsqldb，postgresql， db2，sqlserver，informix，h2，sqlserver2012，derby。
+您还可以实现AbstractHelperDialect，然后配置该属性以实现完全限定的类名。
+特别说明：使用SqlServer2012数据库时，需要手动指定sqlserver2012，否则会使用SqlServer2005进行分页。
+
+offsetAsPageNum：默认值为false，此参数RowBounds作为分页参数有效。当此参数设置为时true，offset参数in RowBounds用作pageNum。
+
+rowBoundsWithCount：默认值为false，当此参数设置true为时，PageHelper将执行计数查询。
+
+pageSizeZero：默认值为false，当此参数设置为true，if pageSize=0或RowBounds.Limit = 0将查询所有结果（相当于Paged查询未执行，但结果的返回类型仍然是Page）。
+
+reasonable：分页参数合理化，默认值为false。当此参数设置为时true，pageNum <= 0将查询第一页， PageNum> pages（超过总数），将查询最后一页。默认情况下false，查询直接基于参数。
+
+supportMethodsArguments：支持通过Mapper接口参数传递page参数，默认值为'false'。方法的使用可以参考和com.github.pagehelper.test.basic下的包中的测试代码。ArgumentsMapTestArgumentsObjTest
+
+autoRuntimeDialect：默认值为false。设置true为时，可以从多个数据源自动识别运行时相应方言的分页（不支持自动选择sqlserver2012，只能使用sqlserver），用法和注意事项请参考下面的场景5。
+
+closeConn：默认值为true。当您使用运行时动态数据源或不设置helperDialect属性时，PageHelper会自动获取数据库类型，然后自动获取数据库连接，此属性用于设置是否关闭连接，默认true关。设置'false'时，它不会关闭连接。
+
+4.如何选择配置这些参数
+以下是可以使用的一些参数的一些示例。
+
+场景1
+如果你还在调用像iBATIS这样的命名空间，你可以使用rowBoundsWithCount。如果要在分页查询查询时进行计数，则需要将此参数设置为true。
+
+注意： PageRowBounds也需要true。
+
+场景2
+如果你仍然有办法调用像iBATIS这样的命名空间，如果你认为RowBounds这两个参数offset, limit不如pageNum, pageSize易于理解。您可以使用offsetAsPageNum参数，在参数设置为true，offset为pageNum，limit并pageSize意味着同样的事情。
+
+场景3
+如果您觉得必须在某处对页面进行分页，并且仍希望使用控制参数查询所有结果。您可以配置pageSizeZero到true，配置后，当pageSize = 0或RowBounds.limit = 0将查询所有的结果。
+
+场景4
+如果你想输入页码用户不在法律范围（第一页到最后一页）以正确到正确的结果页面响应，则可以配置reasonable到true的，如果pageNum <= 0将查询的第一页时，pageNum> pages(total pages)会查询最后一页。
+
+场景5
+如果在Spring中配置动态数据源并连接不同类型的数据库，则可以配置autoRuntimeDialect为true在使用不同数据源时使用匹配的分页查询。在这种情况下，您还需要注意closeConn参数，因为访问数据源的类型将获得数据库连接，因此需要控制此参数以获取连接，是否关闭连接。
+
+默认为true，并且在后续数据库操作之后无法关闭某些数据库连接。并且一些数据库连接不会很快关闭，因为数据库外的连接数没有响应。因此，在使用此功能时，尤其需要注意使用数据源是否需要关闭数据库连接。
+
+当您不使用动态数据源而只是自动获取时helperDialect，数据库连接只会获得一次，因此无需担心此连接是否会导致数据库错误，而且还要根据数据源的特性来实现选择是否关闭连接。
