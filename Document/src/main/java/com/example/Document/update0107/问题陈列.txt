@@ -1,0 +1,4 @@
+1、基站核查接口返回结果中字段dataSource的值应该为null,实际却为String.
+   同样的问题在小区参数验收接口和结构验收接口中也存在。这一点如果web端改着麻烦，android端可以修改。
+2、访问小区参数验收接口时提示“projId/cellId/eNodeBID/testDate不能为空”，
+   原接口中没有eNodeBID这个字段，是否需要加入这个字段？如果需要，请以后提前告诉。
