@@ -1,12 +1,16 @@
 package com.kuandeng.tags.export.service;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import com.kuandeng.tags.export.model.Person;
-import com.kuandeng.tags.export.util.CsvUtil;
+import com.kuandeng.tags.tag.dao.TagDao;
+import com.kuandeng.tags.tag.model.Tag;
 
 /**
  * 
@@ -16,31 +20,35 @@ import com.kuandeng.tags.export.util.CsvUtil;
 @Service
 public class ExportService {
 
-	private final static Logger logger = LoggerFactory.getLogger(ExportService.class);
+	private static final String SUREY_COMPLEMENT_TAG = "tag_survey_complement_tag";
+	@Autowired
+	private TagDao tagDao;
 
-	 /**
-     * 导出用户到csv文件
-     *
-     * @param users 导出的数据（用户）
-     * @return
-     */
-    public byte[] exportTagToCsv(List<Person> users) {
-        List<LinkedHashMap<String, Object>> exportData = new ArrayList<>(users.size());
-        // 行数据
-        for (Person user : users) {
-            LinkedHashMap<String, Object> rowData = new LinkedHashMap<>();
-            rowData.put("1", user.getId());
-            rowData.put("2", user.getName());
-            rowData.put("3", user.getLevel());
-            exportData.add(rowData);
-        }
-        //标题
-        LinkedHashMap<String, String> header = new LinkedHashMap<>();
-        header.put("1", "用户账号");
-        header.put("2", "用户昵称");
-        header.put("3", "用户等级");
-        return CsvUtil.exportCSV(header, exportData);
-    }
-
+	@SuppressWarnings("unchecked")
+	public List<Tag> surveycomplementtag(String adcode, String state) {
+		Query query = new Query();
+		if (StringUtils.isNoneBlank(adcode)) {
+			query.addCriteria(Criteria.where("properties.ADCODE").in(Arrays.asList(adcode.split(","))));
+		}
+		if (StringUtils.isNoneBlank(state)) {
+			query.addCriteria(Criteria.where("properties.STATE").in(Arrays.asList(state.split(","))));
+		}
+		List<Tag> tags = tagDao.find(query, SUREY_COMPLEMENT_TAG);
+		if (tags != null && tags.size() > 0) {
+			for (Tag tag : tags) {
+				Object geometryObj = tag.getGeometry();
+				LinkedHashMap<String, Object> geometry = (LinkedHashMap<String, Object>) geometryObj;
+				if (geometry != null) {
+					Object obj = geometry.get("coordinates");
+					ArrayList<ArrayList<Double>> datas = (ArrayList<ArrayList<Double>>) obj;
+					for (ArrayList<Double> listData : datas) {
+						listData.add(0, listData.get(0) + 9.218603);
+						listData.add(1, listData.get(1) + 48.683012);
+					}
+				}
+			}
+		}
+		return tags;
+	}
 
 }
