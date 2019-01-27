@@ -16,7 +16,7 @@ public class FilterConfig {
 	public FilterRegistrationBean filterRegistrationBean() {
 		FilterRegistrationBean bean=new FilterRegistrationBean();
 		MyFilter myFilter=new MyFilter();
-		bean.setFilter(myFilter);
+		//bean.setFilter(myFilter);
 		bean.addUrlPatterns("/login.html");
 		return bean;
 	}
